@@ -7,26 +7,20 @@ use Illuminate\Http\Request;
 
 class VendorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
         $vendors = Vendor::orderBy('id', 'desc')->get();
         return view('vendors.index', compact('vendors'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
         return view('vendors.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -49,17 +43,13 @@ class VendorController extends Controller
         return redirect()->route('vendors.index')->with('success', 'Vendor berhasil ditambahkan.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit(Vendor $vendor)
     {
         return view('vendors.edit', compact('vendor'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, Vendor $vendor)
     {
         $validated = $request->validate([
@@ -82,9 +72,7 @@ class VendorController extends Controller
         return redirect()->route('vendors.index')->with('success', 'Data vendor berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy(Vendor $vendor)
     {
         $vendor->delete();

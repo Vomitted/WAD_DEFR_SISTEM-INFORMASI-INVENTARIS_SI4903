@@ -12,7 +12,7 @@ class CekGuest
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            return redirect()->route('vendors.index');
+            return redirect()->route(config('alur.jika_sudah_login'));
         }
 
         return $next($request);

@@ -172,4 +172,24 @@ class AuthTest extends TestCase
         $this->assertAuthenticatedAs($user);
         $this->assertNotNull($user->fresh()->remember_token);
     }
+
+    public function test_register_redirects_to_login_when_auto_login_disabled(): void
+    {
+        config(['alur.auto_login_setelah_register' => false]);
+
+        $response = $this->post('/register', [
+            'name'                  => 'Siti Mahasiswi',
+            'email'                 => 'siti@kampus.ac.id',
+            'password'              => 'rahasia123',
+            'password_confirmation' => 'rahasia123',
+        ]);
+
+        $response->assertRedirect('/login');
+        $response->assertSessionHas('success', 'Akun berhasil dibuat, silakan login.');
+        $this->assertGuest();
+        $this->assertDatabaseHas('users', [
+            'name'  => 'Siti Mahasiswi',
+            'email' => 'siti@kampus.ac.id',
+        ]);
+    }
 }

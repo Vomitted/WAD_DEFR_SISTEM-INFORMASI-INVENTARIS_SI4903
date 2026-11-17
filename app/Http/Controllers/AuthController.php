@@ -34,7 +34,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('vendors.index'))
+            return redirect()->intended(route(config('alur.setelah_login')))
                 ->with('success', 'Berhasil login!');
         }
 
@@ -74,11 +74,16 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        Auth::login($user);
-        $request->session()->regenerate();
+        if (config('alur.auto_login_setelah_register')) {
+            Auth::login($user);
+            $request->session()->regenerate();
 
-        return redirect()->route('vendors.index')
-            ->with('success', 'Akun berhasil dibuat, selamat datang!');
+            return redirect()->route(config('alur.setelah_register'))
+                ->with('success', 'Akun berhasil dibuat, selamat datang!');
+        }
+
+        return redirect()->route(config('alur.jika_belum_login'))
+            ->with('success', 'Akun berhasil dibuat, silakan login.');
     }
 
     public function logout(Request $request)
@@ -88,7 +93,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')
+        return redirect()->route(config('alur.setelah_logout'))
             ->with('success', 'Anda sudah logout.');
     }
 }

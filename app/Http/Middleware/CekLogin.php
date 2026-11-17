@@ -16,7 +16,7 @@ class CekLogin
                 return response()->json(['message' => 'Silakan login terlebih dahulu.'], 401);
             }
 
-            return redirect()->guest(route('login'))
+            return redirect()->guest(route(config('alur.jika_belum_login')))
                 ->with('error', 'Silakan login terlebih dahulu.');
         }
 
