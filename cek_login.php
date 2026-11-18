@@ -1,21 +1,22 @@
 <?php
 session_start();
 
-// Contoh sederhana validasi (nanti bisa dihubungkan ke database)
-$user_admin = "admin";
-$pass_admin = "12345";
+include 'koneksi.php'; 
 
 if (isset($_POST['login'])) {
-    if ($_POST['username'] == $user_admin && $_POST['password'] == $pass_admin) {
-        // Jika benar, set session jadi true (tanda sudah login)
-        $_SESSION['status_login'] = true;
-        $_SESSION['username'] = $_POST['username'];
+    $username = mysqli_real_escape_string($koneksi, $_POST['username']);
+    $password = mysqli_real_escape_string($koneksi, $_POST['password']);
 
-        // Alihkan ke halaman daftar barang (index.php)
+    $query = mysqli_query($koneksi, "SELECT * FROM middleware WHERE username = '$username' AND password = '$password'");
+
+    if (mysqli_num_rows($query) > 0) {
+        $_SESSION['status_login'] = true;
+        $_SESSION['username'] = $username;
+
         header("Location: index.php");
         exit;
     } else {
-        // Kalau salah, balik ke login
+
         header("Location: login.php?pesan=gagal");
         exit;
     }
